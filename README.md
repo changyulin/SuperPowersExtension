@@ -1,7 +1,7 @@
 # SuperPowersExtension
 
-如果你习惯使用 SuperPowers 的 AI Coder，也可以直接用本仓库的 skills 来弥补 SuperPowers 在规则、经验沉淀和文档维护上的不足。
-这个仓库用于补充 SuperPowers 中缺少的 skills，把可复用的工程经验整理成独立、可维护的能力模块。
+如果你习惯使用 SuperPowers，也可以直接用本仓库的 skills 来弥补 SuperPowers 在规则、经验沉淀和文档维护上的不足。
+也可单独使用，不依赖于SuperPowers。
 
 ## 当前 Skills
 
