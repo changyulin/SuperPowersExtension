@@ -1,0 +1,164 @@
+version: 1
+
+roots:
+  global_root:
+    path: "%USERPROFILE%\\.experience-memory\\"
+    purpose: 用户级全局经验库
+  project_root:
+    path: "<project-root>\\docs\\experience-memory\\"
+    purpose: 项目事实源
+
+global_layout:
+  registry_projects:
+    path: "%USERPROFILE%\\.experience-memory\\registry\\projects.json"
+    type: json
+    purpose: 记录项目 slug、根目录、最后更新时间
+  shared_learnings:
+    path: "%USERPROFILE%\\.experience-memory\\shared\\learnings.jsonl"
+    type: jsonl
+    purpose: 跨项目稳定经验
+  shared_solutions:
+    path: "%USERPROFILE%\\.experience-memory\\shared\\solutions\\"
+    type: directory
+    purpose: 跨项目问题复盘
+  shared_decisions:
+    path: "%USERPROFILE%\\.experience-memory\\shared\\decisions\\"
+    type: directory
+    purpose: 跨项目决策记录
+  project_catalog:
+    path: "%USERPROFILE%\\.experience-memory\\projects\\<project-slug>\\catalog.json"
+    type: json
+    purpose: 单项目索引与统计
+
+project_layout:
+  learnings:
+    path: "<project-root>\\docs\\experience-memory\\learnings.jsonl"
+    type: jsonl
+    purpose: 项目原子经验库
+  solutions:
+    path: "<project-root>\\docs\\experience-memory\\solutions\\"
+    type: directory
+    purpose: 高价值问题复盘
+  decisions:
+    path: "<project-root>\\docs\\experience-memory\\decisions\\"
+    type: directory
+    purpose: 架构与接口决策记录
+  profile:
+    path: "<project-root>\\docs\\experience-memory\\profile.json"
+    type: json
+    purpose: 项目记忆元信息
+  state:
+    path: "<project-root>\\docs\\experience-memory\\state.json"
+    type: json
+    purpose: 最近检索、写入、晋升状态
+
+learning_entry:
+  description: 原子经验记录。一行一个 JSON 对象。
+  required:
+    - id
+    - kind
+    - scope
+    - project
+    - title
+    - summary
+    - rule
+    - confidence
+    - tags
+    - files
+    - source
+    - created_at
+    - updated_at
+    - status
+  fields:
+    id:
+      type: string
+      example: "2026-04-01-test-env-before-app-init"
+    kind:
+      type: enum
+      values:
+        - error_fix
+        - best_practice
+        - project_preference
+        - decision
+    scope:
+      type: enum
+      values:
+        - project
+        - global
+    project:
+      type: string
+      example: "mt-ai-dataanalysisagent2"
+    title:
+      type: string
+    summary:
+      type: string
+    rule:
+      type: string
+    confidence:
+      type: number
+      range: "0.0 - 1.0"
+    tags:
+      type: array[string]
+    files:
+      type: array[string]
+    source:
+      type: string
+      examples:
+        - observed
+        - user_instruction
+        - postmortem
+        - promoted
+    created_at:
+      type: datetime
+    updated_at:
+      type: datetime
+    status:
+      type: enum
+      values:
+        - active
+        - stale
+        - superseded
+    promoted_at:
+      type: datetime
+      required: false
+    promoted_from:
+      type: string
+      required: false
+
+solution_doc:
+  filename: "YYYY-MM-DD-<slug>.md"
+  frontmatter:
+    required:
+      - title
+      - kind
+      - scope
+      - project
+      - created_at
+      - tags
+      - related_learnings
+  sections:
+    - 问题
+    - 症状
+    - 根因
+    - 处理过程
+    - 最终修复
+    - 防复发措施
+    - 验证
+
+decision_doc:
+  filename: "YYYY-MM-DD-<slug>.md"
+  frontmatter:
+    required:
+      - title
+      - kind
+      - scope
+      - project
+      - created_at
+      - tags
+      - related_learnings
+  sections:
+    - 背景
+    - 决策
+    - 备选方案
+    - 影响
+    - 重新评估触发条件

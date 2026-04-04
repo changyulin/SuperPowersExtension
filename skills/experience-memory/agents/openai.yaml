@@ -1,0 +1,6 @@
+interface:
+  display_name: "Experience Memory"
+  short_description: "Capture and reuse project and global engineering memory"
+  default_prompt: "Search, record, promote, or prune experience memory for this project"
+policy:
+  allow_implicit_invocation: true
