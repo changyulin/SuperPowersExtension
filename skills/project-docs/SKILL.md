@@ -1,5 +1,5 @@
 ---
-name: maintain-project-docs
+name: project-docs
 description: Use when creating or updating lightweight project documentation in a repository, especially README, project overviews, architecture docs, business rules, coding guidelines, ADRs, module READMEs, how-to guides, or docs added after code changes in an existing codebase.
 ---
 
