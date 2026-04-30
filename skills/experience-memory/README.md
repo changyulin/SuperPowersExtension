@@ -365,6 +365,12 @@ python ".\scripts\memory_cli.py" promote --project-root "." --id "2026-04-01-tes
 
 如果你想要的不是“知识库”，而是“带项目上下文优先级、可逐步晋升到全局的工程记忆层”，这个仓库就是为这个目标设计的。
 
+## 编码兼容
+
+- CLI 启动时会主动将 `stdout` 和 `stderr` 重设为 `UTF-8`，减少 Windows PowerShell 下中文输出乱码。
+- `learnings.jsonl` 读取采用逐行解码，按 `utf-8-sig`、`utf-8`、`gb18030` 顺序兼容历史混合编码记录。
+- 如果从旧环境导入过记忆文件，建议在确认内容无误后将整份 `JSONL` 标准化回 `UTF-8`，避免其他只支持单一编码的工具再次失败。
+
 ## AGENTS.md
 请在AGENTS.md中加入以下内容：
 ```

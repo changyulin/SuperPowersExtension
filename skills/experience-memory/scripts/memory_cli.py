@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -17,6 +18,7 @@ KIND_CHOICES = (
 )
 
 DOC_KIND_CHOICES = ("solution", "decision")
+JSONL_FALLBACK_ENCODINGS = ("utf-8-sig", "utf-8", "gb18030")
 
 
 @dataclass(slots=True)
@@ -84,9 +86,7 @@ def build_paths(project_root: str | None) -> MemoryPaths:
         global_shared_learnings=shared_root / "learnings.jsonl",
         global_shared_solutions=shared_root / "solutions",
         global_shared_decisions=shared_root / "decisions",
-        global_project_catalog=(
-            global_root / "projects" / slug / "catalog.json"
-        ),
+        global_project_catalog=(global_root / "projects" / slug / "catalog.json"),
     )
 
 
@@ -105,6 +105,21 @@ def ensure_jsonl_file(path: Path) -> None:
     path.touch(exist_ok=True)
 
 
+def configure_stdio() -> None:
+    for stream_name, errors in (
+        ("stdout", "strict"),
+        ("stderr", "backslashreplace"),
+    ):
+        stream = getattr(sys, stream_name, None)
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors=errors)
+        except ValueError:
+            continue
+
+
 def read_json(path: Path, default: dict[str, Any]) -> dict[str, Any]:
     if not path.exists():
         return default
@@ -119,16 +134,28 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
+def decode_jsonl_line(raw_line: bytes) -> str:
+    last_error: UnicodeDecodeError | None = None
+    for encoding in JSONL_FALLBACK_ENCODINGS:
+        try:
+            return raw_line.decode(encoding)
+        except UnicodeDecodeError as exc:
+            last_error = exc
+
+    assert last_error is not None
+    raise last_error
+
+
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
 
     rows: list[dict[str, Any]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
+    for raw_line in path.read_bytes().splitlines():
+        stripped = raw_line.strip()
         if not stripped:
             continue
-        rows.append(json.loads(stripped))
+        rows.append(json.loads(decode_jsonl_line(stripped)))
     return rows
 
 
@@ -547,6 +574,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    configure_stdio()
     parser = build_parser()
     args = parser.parse_args()
     return args.func(args)
