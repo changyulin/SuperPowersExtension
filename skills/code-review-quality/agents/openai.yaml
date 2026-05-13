@@ -1,0 +1,6 @@
+interface:
+  display_name: "Code Review Quality"
+  short_description: "Review code for correctness, risk, and maintainability"
+  default_prompt: "Use $code-review-quality to review this diff for correctness, security, maintainability, performance, and test gaps."
+policy:
+  allow_implicit_invocation: true
