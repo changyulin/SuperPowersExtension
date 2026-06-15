@@ -1,0 +1,42 @@
+[
+  {
+    "query": "帮我审一下这个 PR，主要看有没有回归风险和接口兼容问题。",
+    "should_trigger": true
+  },
+  {
+    "query": "review 这段 diff，新增了支付回调处理和一段异步任务。",
+    "should_trigger": true
+  },
+  {
+    "query": "看下这个改动有没有问题，尤其是权限和租户隔离。",
+    "should_trigger": true
+  },
+  {
+    "query": "这段生成代码准备上线前帮我做一次质量把关。",
+    "should_trigger": true
+  },
+  {
+    "query": "检查这个 bugfix 的测试缺口和潜在 regression risk。",
+    "should_trigger": true
+  },
+  {
+    "query": "解释一下这个函数是怎么解析配置文件的，我只是想理解逻辑。",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我实现一个订单状态机，先不要 review。",
+    "should_trigger": false
+  },
+  {
+    "query": "跑一下测试看看失败原因，不需要做代码评审。",
+    "should_trigger": false
+  },
+  {
+    "query": "把这段 Python 格式化一下，遵循 black 即可。",
+    "should_trigger": false
+  },
+  {
+    "query": "给这个模块写 README，说明 API 怎么调用。",
+    "should_trigger": false
+  }
+]

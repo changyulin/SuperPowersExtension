@@ -1,6 +1,6 @@
 ---
 name: code-review-quality
-description: Use when reviewing code, pull requests, diffs, patches, refactors, bugfixes, generated changes, or when the user asks in Chinese to 审一下代码, 做代码评审, 看下这个改动有没有问题, or 帮我 review. Applies to correctness, security, maintainability, performance, test gaps, regression risk, API contract drift, and overall code quality.
+description: Use when the user asks to review code, PRs, diffs, patches, refactors, bugfixes, generated code, security risks, regression risk, API contract drift, test gaps, or says 审一下代码, 做代码评审, 看下这个改动有没有问题, 帮我 review, 检查风险, or 质量把关.
 ---
 
 # 代码审查与质量
