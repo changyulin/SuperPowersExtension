@@ -1,6 +1,6 @@
 ---
 name: code-review-quality
-description: Use when reviewing code, pull requests, diffs, patches, refactors, bugfixes, or generated changes for correctness, security, maintainability, performance, test gaps, regression risk, API contract drift, or overall code quality.
+description: Use when reviewing code, pull requests, diffs, patches, refactors, bugfixes, generated changes, or when the user asks in Chinese to 审一下代码, 做代码评审, 看下这个改动有没有问题, or 帮我 review. Applies to correctness, security, maintainability, performance, test gaps, regression risk, API contract drift, and overall code quality.
 ---
 
 # 代码审查与质量
@@ -20,11 +20,17 @@ description: Use when reviewing code, pull requests, diffs, patches, refactors, 
 - 在一次审查里给出完整反馈，避免拿到一点信息就零散输出。
 - 如果没有发现问题，明确说明没有发现，并补充剩余风险或未验证区域。
 
+## 适用场景
+
+当用户要求“审一下代码”“代码评审”“看下这个改动”“帮我 review”、检查 PR、diff、补丁、重构、bugfix、生成代码或质量风险时使用这个 skill。
+
+如果用户只是要求实现功能、解释代码或运行测试，先完成对应任务；只有当请求包含审查、评审、review、风险检查、质量把关等意图时再进入审查模式。
+
 ## 审查流程
 
 1. 先读变更范围：diff、相关文件、测试、配置、接口、数据模型。
 2. 重建真实行为路径：输入从哪里来，状态如何变化，输出和副作用落到哪里。
-3. 按风险维度审查：正确性、安全性、可维护性、性能、测试。
+3. 按风险维度审查：正确性、契约与兼容性、安全性、数据与状态、并发与时序、性能与资源、可维护性、测试与可观测性。
 4. 把问题按优先级整理，再输出 findings。
 5. 在 findings 后补充开放问题、积极评价和剩余风险。
 
@@ -70,11 +76,29 @@ description: Use when reviewing code, pull requests, diffs, patches, refactors, 
 - 边界条件、空值、异常路径、回滚路径是否覆盖。
 - 重构后是否改变了原有语义。
 
+### 契约与兼容性
+
+- API、事件、DTO、数据库字段、配置键或返回结构是否改变。
+- 调用方、序列化、文档、测试和示例是否同步。
+- 是否破坏向后兼容、用户可见格式或已有集成。
+
 ### 安全性
 
 - 输入是否被验证、转义、约束。
 - 权限、认证、授权、租户隔离是否正确。
 - 是否泄露敏感信息、令牌、内部错误细节。
+
+### 数据与状态
+
+- 写入、删除、迁移、缓存、索引和唯一约束是否保持一致。
+- 异常、重试、回滚、补偿和幂等是否覆盖关键路径。
+- 是否可能导致重复写入、丢失更新、脏数据或部分成功状态。
+
+### 并发与时序
+
+- 是否存在竞争条件、死锁、乱序、重复消费或后台任务堆积。
+- 锁、队列、异步任务、取消和超时处理是否安全。
+- 是否依赖不稳定的请求顺序、线程模型或时间窗口。
 
 ### 可维护性
 
@@ -87,11 +111,12 @@ description: Use when reviewing code, pull requests, diffs, patches, refactors, 
 - 是否存在明显的重复计算、无界循环、N+1、过大对象复制或不必要的 IO。
 - 是否在高频路径引入了额外锁、网络调用或序列化成本。
 
-### 测试
+### 测试与可观测性
 
 - 关键行为、失败路径和边界条件是否有测试。
 - 测试是否真的覆盖风险，而不是只覆盖 happy path。
 - 如果没有测试，是否至少指出未验证的高风险区域。
+- 日志、指标、trace 和错误信息是否足够定位问题，且不会泄露敏感信息。
 
 ## 不要这样审查
 
@@ -107,3 +132,5 @@ description: Use when reviewing code, pull requests, diffs, patches, refactors, 
   - 更完整的风险检查清单，适合复杂改动或大 PR。
 - `references/output-format.md`
   - findings、开放问题、积极反馈和总结的推荐输出格式。
+- `evals/evals.json`
+  - 用于后续验证这个 skill 是否能稳定触发并输出高信号审查结果的评测提示词。
