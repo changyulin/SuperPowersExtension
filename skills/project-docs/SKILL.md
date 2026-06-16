@@ -1,16 +1,85 @@
 ---
 name: project-docs
-description: Use when creating or updating lightweight project documentation in a repository, especially README, project overviews, architecture docs, business rules, coding guidelines, ADRs, module READMEs, how-to guides, or docs added after code changes in an existing codebase.
+description: Use when creating or updating repository documentation such as README, project overview, architecture docs, business rules, coding guidelines, ADRs, module READMEs, how-to guides, or when code changes affect behavior, APIs, boundaries, dependencies, decisions, or module responsibilities.
 ---
 
 # 项目文档维护
 
 ## 核心原则
 
-- 文档要短、准、可维护，优先帮助人和 AI 快速做事。
-- 先复用现有文档，再新增；先更新最相关文档，再扩展到新文档。
-- 只写会稳定影响后续开发、验收和协作的内容。
-- 如果仓库里已有 `PRD.md` 或同类需求文件，先以它判断文档范围和优先级。
+文档要短、准、可维护，优先帮助人和 AI 快速完成后续开发、验收和排障。
+
+- 先读现有资料，再写新内容。
+- 先更新最近、最相关的文档，再考虑新增文档。
+- 只写稳定影响后续工作的事实、边界、规则、决策和验证方式。
+- 沿用仓库已有语言、标题风格、目录习惯和链接写法。
+- 文档与代码冲突时，以已验证的代码行为、测试结果或用户确认的需求为准。
+
+## 适用边界
+
+### 使用本 skill
+
+- 新建或更新 `README.md`、项目总览、架构、业务规则、编码规范、ADR、模块 README、how-to。
+- 完成代码变更后，同步行为、接口、边界、依赖、决策或模块职责的文档。
+- 用户要求“补文档”“整理项目说明”“写架构说明”“记录设计决策”“更新 README”。
+- 发现现有文档过期、冲突、缺入口、缺导航、缺验收说明。
+
+### 不使用本 skill
+
+- 写营销页、发布稿、教程文章、博客或外部宣传材料。
+- 写一次性会议纪要、流水账、日报周报。
+- 生成 API 参考时已有专用文档工具或代码注释生成器。
+- 用户只要求解释代码，不要求落地到仓库文档。
+
+## 标准工作流
+
+1. **收集输入**
+   - 输入：用户请求、已完成的代码变更、`README.md`、`docs/`、`PRD.md`、现有模块文档。
+   - 输出：本次文档变更的目标、范围、事实来源。
+
+2. **盘点现状**
+   - 找出现有文档的角色：入口、总览、架构、规则、规范、决策、模块说明、操作指南。
+   - 标出缺口：缺入口、缺导航、缺边界、缺规则、缺验证方法、内容过期。
+   - 不先重命名、复制或重构目录。
+
+3. **选择最小文档集**
+   - 用“文档路由表”选择承载位置。
+   - 已有合适文档时直接更新它。
+   - 没有承载位置时才新增文档，并补导航链接。
+
+4. **写稳定内容**
+   - 写目的、边界、职责、规则、例外、示例、验证方式、相关链接。
+   - 写“为什么这么定”和“哪些地方不能改”。
+   - 不复制代码中一眼可见的实现细节。
+
+5. **CHECKPOINT: 新建或扩大文档范围前先停下**
+   - 新建顶层目录、重排文档结构、移动或重命名已有文档前，先征求用户确认。
+   - 准备新增 ADR 但决策未被用户或代码事实确认时，先征求用户确认。
+   - 需要补业务事实但来源不足时，先提出缺口，不编造规则。
+
+6. **验收**
+   - 检查链接是否有效、标题是否清楚、文档是否仍能独立理解。
+   - 检查 README 或导航是否能到达新增文档。
+   - 检查文档没有与已验证代码行为、测试结果或用户要求冲突。
+
+7. **交付说明**
+   - 说明更新了哪些文件。
+   - 说明依据来自代码、现有文档、测试结果还是用户要求。
+   - 说明未覆盖的缺口和需要用户确认的问题。
+
+## 文档路由表
+
+| 内容类型 | 写入位置 | 必写内容 |
+|---|---|---|
+| 项目入口、最短上手路径、文档导航 | `README.md` | 项目是什么、怎么启动、去哪里找文档 |
+| 背景、目标、技术栈、目录说明 | `docs/project-docs/project-overview.md` | 目标、边界、入口、运行方式 |
+| 分层、模块关系、依赖约束 | `docs/project-docs/architecture.md` | 分层、边界、数据流、外部依赖 |
+| 业务对象、流程、状态、规则、例外 | `docs/project-docs/business-rules.md` | 对象、流程、状态、规则、例外 |
+| 命名、分层、错误处理、日志、禁止事项 | `docs/project-docs/coding-guidelines.md` | 统一写法、禁止事项、验证要求 |
+| 关键设计决策及原因 | `docs/project-docs/adr/NNNN-title.md` | 背景、备选方案、决策、后果 |
+| 单个模块说明 | `docs/project-docs/modules/<module>/README.md` | 职责、对外能力、依赖、边界、坑位 |
+| 可重复执行的操作 | `docs/project-docs/how-to/<task>.md` | 目标、前置条件、步骤、验证方法 |
+| 图表、截图、流程图 | `docs/project-docs/assets/` | 只放附件，正文保留必要链接 |
 
 ## 标准结构
 
@@ -29,72 +98,112 @@ description: Use when creating or updating lightweight project documentation in 
         └── assets/
 ```
 
-- `README.md`: 项目入口、最短上手路径、指向其他文档的导航。
-- `docs/project-docs/project-overview.md`: 项目背景、目标、技术栈、启动方式、目录说明。
-- `docs/project-docs/architecture.md`: 系统分层、模块划分、依赖关系、边界与约束。
-- `docs/project-docs/business-rules.md`: 核心业务对象、流程、状态机、规则、例外。
-- `docs/project-docs/coding-guidelines.md`: 命名、分层、错误处理、日志、禁止事项。
-- `docs/project-docs/adr/`: 设计决策记录，只写“为什么这么定”。
-- `docs/project-docs/modules/<module>/README.md`: 核心模块说明，按模块复杂度按需创建。
-- `docs/project-docs/how-to/`: 常见任务、操作指南、重复性流程。
-- `docs/project-docs/assets/`: 图表、截图、流程图等附件。
+不要为了补齐目录而创建空文档。只有用户请求、代码变更或稳定协作需求需要承载位置时，才创建对应文件。
 
-## 选文档
+## 最小模板
 
-- 先判断任务类型，再选最小文档集。
-- 项目总览类内容写到 `README.md` 和 `docs/project-docs/project-overview.md`。
-- 架构边界、模块关系、依赖约束写到 `docs/project-docs/architecture.md`。
-- 业务对象、流程、状态、规则、例外写到 `docs/project-docs/business-rules.md`。
-- 命名、分层、错误处理、日志、禁止事项写到 `docs/project-docs/coding-guidelines.md`。
-- 关键决策及其原因写到 `docs/project-docs/adr/`。
-- 单个模块的职责、对外能力、依赖、坑位写到模块级 `README.md`。
-- 可重复执行的操作写到 `docs/project-docs/how-to/`。
-- 图表和截图单独放到 `docs/project-docs/assets/`，正文只保留必要链接。
+### README.md
 
-## 写什么
+```markdown
+# [项目名]
 
-- 写目的、边界、职责、规则、例外、例子、相关链接。
-- 写“为什么”以及“哪些地方不能改”，不要只写当前代码长什么样。
-- 写能帮助后续改代码、做验收、排查问题的内容。
-- 新增文档时，优先保持结构统一，方便 AI 快速检索和复用。
+## 项目简介
+[一句话说明项目解决什么问题。]
 
-## 不写什么
+## 快速开始
+[最短可验证启动路径。]
+
+## 文档导航
+- [项目总览](docs/project-docs/project-overview.md)
+- [架构说明](docs/project-docs/architecture.md)
+- [业务规则](docs/project-docs/business-rules.md)
+- [编码规范](docs/project-docs/coding-guidelines.md)
+```
+
+### ADR
+
+```markdown
+# ADR NNNN: [决策标题]
+
+## 状态
+[Proposed / Accepted / Superseded]
+
+## 背景
+[问题和约束。]
+
+## 备选方案
+[列出可行选择。]
+
+## 决策
+[选择什么，以及为什么。]
+
+## 后果
+[收益、代价、后续约束。]
+```
+
+### 模块 README
+
+```markdown
+# [模块名]
+
+## 职责
+[这个模块负责什么，不负责什么。]
+
+## 对外能力
+[入口、接口、命令或主要调用方式。]
+
+## 依赖与边界
+[依赖谁，被谁依赖，不能跨过哪些边界。]
+
+## 验证方法
+[如何确认模块仍然工作。]
+```
+
+### how-to
+
+```markdown
+# [任务名]
+
+## 目标
+[完成后应达到的状态。]
+
+## 前置条件
+[需要的配置、权限、输入文件或环境。]
+
+## 步骤
+1. [第一步]
+2. [第二步]
+
+## 验证
+[命令、现象或检查点。]
+```
+
+## 失败分支
+
+| 触发条件 | 一线处理 | 仍无法处理时 |
+|---|---|---|
+| 找不到现有文档 | 先更新或创建 `README.md` 作为入口 | 任务范围不清时，问用户要入口、总览还是专题文档 |
+| 有多个同类文档 | 选择最近、最相关、被 README 或导航引用的文档 | 标出冲突，不合并不重命名，等用户确认 |
+| 文档与代码冲突 | 用已验证代码行为或测试结果修正文档 | 无法验证时注明“待确认”，不写成事实 |
+| PRD 或需求文件缺失 | 使用用户请求和代码事实限定范围 | 涉及业务规则时列出缺口，等待用户确认 |
+| 需要新增文档但没有导航 | 新增后同步 README 或目录页链接 | 无法判断导航位置时，只更新最近入口文档 |
+| 用户只给模糊要求 | 先给最小文档方案和假设 | 假设影响范围较大时，先问一个具体问题 |
+
+## 黑名单
 
 - 不写大而空的口号、营销话术、纯概念堆砌。
-- 不写重复代码里已经很清楚的实现细节。
-- 不写过期内容、历史脉络流水账、无人维护的长文档。
-- 不写只有背景、没有边界和例外的说明。
-- 不为了补齐目录而补齐目录，只有确实有用时才创建新文档。
+- 不写重复代码里已经清楚表达的实现细节。
+- 不写过期内容、历史流水账、无人维护的长文档。
+- 不写只有背景、没有边界、例外和验证方式的说明。
+- 不凭空补业务规则、接口承诺、性能指标、权限范围或安全结论。
+- 不为凑目录创建空文件。
+- 不在未确认的情况下移动、重命名或重排已有文档结构。
 
-## 已有项目补文档
+## 轻量验收清单
 
-1. 先扫描现有文档，找出已经存在的角色和缺口。
-2. 把现有文档映射到标准结构，不要先重命名、先复制、再重构。
-3. 优先补最小必需集：入口、总览、架构、业务规则、规范。
-4. 只有当前没有合适承载位置时，才新增文档。
-5. 如果已有文档可以更新，就直接更新它，不要再造一份同类文档。
-
-## 验收后同步文档
-
-- 代码验收完成后，检查这次变更是否影响行为、接口、边界、依赖、决策、模块职责。
-- 只要有影响，就在同一轮里更新或新增对应文档。
-- 如果新增文档，顺手补 README 或导航链接，避免文档孤岛。
-- 如果变更只影响局部，优先更新最近、最相关的文档。
-- 如果文档和代码出现分歧，以代码验收结果为准，立刻修正文档。
-
-## 默认模板
-
-- `README.md`: 项目是什么、怎么启动、去哪里找文档。
-- `docs/project-docs/project-overview.md`: 背景、目标、技术栈、目录、入口。
-- `docs/project-docs/architecture.md`: 分层、边界、依赖、约束。
-- `docs/project-docs/business-rules.md`: 对象、流程、状态、规则、例外。
-- `docs/project-docs/coding-guidelines.md`: 团队约定、禁止事项、统一写法。
-- `docs/project-docs/adr/`: 问题、备选方案、决策、后果。
-- `docs/project-docs/modules/<module>/README.md`: 职责、依赖、边界、坑位。
-- `docs/project-docs/how-to/`: 目标、前置条件、步骤、验证方法。
-
-## 保持轻量
-
-- 一页能讲清楚的，不要写成十页。
-- 文档粒度按“主题 / 模块”切，不按“时间 / 人名”切。
-- 只维护关键文档，其他内容宁可链接到代码或更小的文档。
+- 文档有明确受众和用途。
+- 新增内容能追溯到用户请求、代码事实、测试结果或已有文档。
+- 新增或更新的文档能从 README 或导航找到。
+- 文档写清边界、例外和验证方法。
+- 没有引入未确认事实。
+- 没有产生同类重复文档。
