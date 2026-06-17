@@ -1,8 +1,10 @@
 ---
 name: experience-memory
-description: Use when an agent needs to capture, retrieve, promote, or prune
-  reusable engineering experience across a project-local and user-global
-  experience memory store.
+description: Use when starting implementation, debugging, refactoring, or test
+  work that may depend on prior project experience; when the user asks to
+  remember, record, 沉淀, 检索, 晋升, promote, prune, or clean engineering
+  experience; or when a repeated bug, project preference, architectural
+  decision, or reusable lesson should be checked or stored.
 ---
 
 # Experience Memory
@@ -24,6 +26,7 @@ description: Use when an agent needs to capture, retrieve, promote, or prune
 
 在下面这些情况触发：
 
+- 开始实现、排错、重构、补测试或调整工程约束前，可能需要先查旧经验
 - 解决了一个之前踩过或以后大概率还会踩的错误
 - 发现了一个稳定最佳实践，不再希望重复试错
 - 用户明确表达了项目偏好、禁忌或约束
@@ -31,6 +34,16 @@ description: Use when an agent needs to capture, retrieve, promote, or prune
 - 开始新任务前，希望先检索这个项目以前的经验
 - 完成任务后，希望把新经验追加到本地或晋升到全局
 - 需要清理过期、重复、冲突的经验记录
+
+## 快速判定
+
+| 场景 | 动作 | 停止条件 |
+|---|---|---|
+| 新任务可能受历史经验影响 | 先 `search`，项目内优先，全局次之 | 命中后先核对当前文件和代码仍然一致 |
+| 修复了明确且可复用的问题 | 用 `add` 写入项目内 `learnings.jsonl` | 没有根因或验证证据时不要写入 |
+| 一条 learning 不足以解释背景 | 用 `new-doc` 生成 `solution` 或 `decision` 模板 | 只生成模板后必须补真实内容 |
+| 经验看起来可跨项目复用 | 先检查是否依赖当前仓库私有细节，再考虑 `promote` | 证据不足或语义依赖本仓库时停在项目内 |
+| 记忆库有噪音 | 先列候选并标记状态 | 删除或批量改状态前必须获得用户确认 |
 
 不要记录下面这些内容：
 
@@ -116,6 +129,9 @@ python ".\scripts\memory_cli.py" search "pytest env app init" `
 
 检索规则见 `references/retrieval-workflow.md`。
 
+如果没有命中，继续按真实代码和当前需求工作；不要为了填充记忆而制造经验。
+如果命中条目提到的文件已经不存在，把该命中视为可疑，并把它加入后续清理候选。
+
 ### 3. 发生新经验时记录
 
 把经验先写到项目内：
@@ -130,6 +146,12 @@ python ".\scripts\memory_cli.py" add `
   --file "src/app/main.py" --file "tests/conftest.py" `
   --project-root "<project-root>"
 ```
+
+写入前确认三件事：
+
+1. 已经知道根因、稳定规则或明确用户偏好。
+2. 这不是一次性、偶发或未验证猜测。
+3. `title` 和 `rule` 能让下次检索者直接理解怎么行动。
 
 ### 4. 高价值案例升级成文档
 
@@ -152,6 +174,12 @@ python ".\scripts\memory_cli.py" promote `
   --project-root "<project-root>"
 ```
 
+CHECKPOINT / STOP：晋升会影响其他项目。执行前必须确认：
+
+- 该经验已经在项目内记录并验证。
+- 规则不依赖当前仓库的私有目录、接口、数据或业务口径。
+- 用户没有要求只保留为项目内经验。
+
 ### 6. 定期清理
 
 清理不是默认删除，而是先识别：
@@ -162,6 +190,20 @@ python ".\scripts\memory_cli.py" promote `
 - 已被更新决策替代的旧条目
 
 清理规则见 `references/pruning-rules.md`。
+
+CHECKPOINT / STOP：清理默认不删除。删除、批量标记或合并前，先列出候选、原因和影响范围，等用户明确确认。
+
+## 失败分支
+
+| 触发条件 | 一线处理 | 仍失败时 |
+|---|---|---|
+| `search` 没有命中 | 继续真实代码分析，不编造记忆 | 任务结束后若产生新经验，再考虑 `add` |
+| 命中条目的文件路径不存在 | 把命中降级为可疑 | 加入清理候选，不直接采用 |
+| 项目内和全局经验冲突 | 项目内优先，再看更新时间和置信度 | 仍无法判断时向用户说明冲突并暂停采用 |
+| `memory_cli.py` 路径找不到 | 先定位 skill 根目录或使用绝对路径 | 不要改写记忆目录结构来适配错误路径 |
+| 写入或初始化遇到权限错误 | 报告目标路径和失败命令 | 不要改到别的仓库或全局目录绕过权限 |
+| `learnings.jsonl` 解析失败 | 停止写入，保留原文件 | 先备份并人工检查坏行，再恢复操作 |
+| 用户要求删除记忆 | 先确认条目重复、无效或错误 | 未确认前只允许标记候选或建议合并 |
 
 ## 路径解析原则
 

@@ -1,0 +1,66 @@
+[
+  {
+    "query": "开始改这个 pytest 失败前，先看看我们以前是不是踩过类似配置坑，尤其是 app 初始化和环境变量顺序。",
+    "should_trigger": true
+  },
+  {
+    "query": "这个修复以后肯定还会遇到，帮我把经验沉淀一下，记录到项目内记忆，不要下次又查半天。",
+    "should_trigger": true
+  },
+  {
+    "query": "用户刚刚明确说以后这个仓库不要自动删生成文件，我需要把这个项目偏好记下来。",
+    "should_trigger": true
+  },
+  {
+    "query": "这个架构边界决定以后会影响很多人，帮我写成 decision 记忆，并考虑要不要升级成长文档。",
+    "should_trigger": true
+  },
+  {
+    "query": "整理一下 experience memory，看看有没有重复、过期、互相冲突的规则，但先不要删除。",
+    "should_trigger": true
+  },
+  {
+    "query": "把这条项目经验 promote 到全局之前，帮我判断它是不是跨项目仍然成立。",
+    "should_trigger": true
+  },
+  {
+    "query": "我记得之前处理过 Langfuse trace 串线，先查下本项目和全局经验里有没有相关记录。",
+    "should_trigger": true
+  },
+  {
+    "query": "刚修了一个一眼看起来小但会反复踩的 Windows 编码问题，帮我记录成可复用工程经验。",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我给这个 Python 函数加类型注解，并顺手跑一下 compileall。",
+    "should_trigger": false
+  },
+  {
+    "query": "把 README 里的安装说明润色一下，别改功能。",
+    "should_trigger": false
+  },
+  {
+    "query": "这个 bug 怎么修？错误是 KeyError: user_id，直接看代码定位就行。",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我写一个新的 pytest，用来覆盖 parse_score_response 缺字段时报错。",
+    "should_trigger": false
+  },
+  {
+    "query": "解释一下这个项目里 JSONL 是什么格式。",
+    "should_trigger": false
+  },
+  {
+    "query": "把这段中文翻译成英文，保持技术语气。",
+    "should_trigger": false
+  },
+  {
+    "query": "生成一个 Mermaid 流程图说明用户登录过程。",
+    "should_trigger": false
+  },
+  {
+    "query": "列一下 git status 现在有哪些文件改动。",
+    "should_trigger": false
+  }
+]

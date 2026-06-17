@@ -1,0 +1,38 @@
+{
+  "skill_name": "experience-memory",
+  "evals": [
+    {
+      "id": "search-before-debugging",
+      "prompt": "我准备修一个之前可能踩过的 pytest 配置问题。请先判断是否应该查 experience memory，并说明你会查哪些关键词、先查项目内还是全局、命中后怎么使用。",
+      "expected_output": "应该先检索记忆；输出项目内优先、全局次之的检索顺序；给出由错误词、模块名、测试名、用户强调偏好组成的查询词；说明命中旧经验后仍要核对当前代码，不机械套用。",
+      "files": [],
+      "expectations": [
+        "明确选择先检索项目内 experience memory，再按需检索全局记忆。",
+        "查询词包含错误关键词、模块名/文件名/测试名或用户偏好词中的至少两类。",
+        "说明旧经验需要和当前代码或文件存在性核对后再采用。"
+      ]
+    },
+    {
+      "id": "record-verified-learning",
+      "prompt": "刚修复了一个重复出现的 bug：初始化 app 前必须设置 TESTING=true，否则会误连开发数据库。请判断是否应该写入 experience memory，并给出应记录的 kind、title、summary、rule、tags、files。",
+      "expected_output": "应该写入项目内 learning，kind 为 error_fix 或 best_practice；字段完整且把 rule 写成可复用规则；不直接晋升全局，除非确认跨项目成立。",
+      "files": [],
+      "expectations": [
+        "判断该经验应写入项目内记忆，而不是直接写入全局记忆。",
+        "输出包含 kind、title、summary、rule、tags、files 六类字段。",
+        "说明只有跨项目仍成立且已验证时才考虑 promote。"
+      ]
+    },
+    {
+      "id": "promote-or-stop",
+      "prompt": "用户说：这个项目里 SQL 校验器要先归一化空白再比较，帮我把这个经验晋升到全局。请判断能不能直接 promote，并说明下一步。",
+      "expected_output": "不能直接晋升；先检查经验是否已在项目内记录并验证，判断是否依赖该仓库私有 SQL 校验器细节；如果证据不足，应停下询问或只保留项目内。",
+      "files": [],
+      "expectations": [
+        "没有在证据不足时直接执行 promote。",
+        "检查该经验是否依赖当前仓库私有实现细节。",
+        "在全局晋升前设置用户确认或证据检查步骤。"
+      ]
+    }
+  ]
+}
